@@ -236,8 +236,9 @@ async fn main() {
         .layer(cors)
         .with_state(client);
 
-    let addr = "127.0.0.1:8080";
+    let port = env::var("PORT").unwrap_or_else(|_| "8080".to_string());
+    let addr = format!("0.0.0.0:{}", port);
     tracing::info!("Listening on {}", addr);
-    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+    let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
